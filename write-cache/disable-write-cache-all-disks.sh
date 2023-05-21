@@ -28,8 +28,9 @@ do
         if [[ "$(sudo nvme id-ctrl /dev/$blockDev | grep 'vwc ' | sed 's/[^0-9]*//g')" != "0" ]]; then
             # vwc seems available, so try to disable the feature
             vwcResult=$(nvme set-feature -f 6 -v 0 /dev/$blockDev 2>&1)
+            # It's possible that the feature needs to be disabled one level up (e.g. nvme0 instead of nvme0n1)
             if [[ "$vwcResult" == *"FEATURE_NOT_PER_NS"* ]]; then
-                # Try to apply to the entire device
+                # Try to disable on the entire namespace
                 fullDev=$(echo $blockDev | sed 's/n[0-9]\+//g')
                 echo && echo /dev/$fullDev
                 nvme set-feature -f 6 -v 0 /dev/$fullDev
