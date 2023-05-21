@@ -16,7 +16,7 @@ for blockDev in $(ls /sys/block)
 do
     # Ignore devices which are unlikely to support the hdparm command
     if [[ "$blockDev" != "dm-"* && "$blockDev" != "loop"* && "$blockDev" != "md"* && "$blockDev" != "nvme"* ]]; then
-        # Enable only if it seems supported
+        # Check if it is supported
         if [[ "$(hdparm -W /dev/$blockDev)" != *"not supported"* ]]; then
             hdparm -W 1 /dev/$blockDev
         else
@@ -24,13 +24,23 @@ do
         fi
     # Try a different method with nvme devices
     elif [[ "$blockDev" == "nvme"* ]]; then
-        # Format the result similar to hdparm for consistency
-        echo && echo /dev/$blockDev:
         # Check if the device has the 'vwc ' feature (the space filters out other features)
         if [[ "$(sudo nvme id-ctrl /dev/$blockDev | grep 'vwc ' | sed 's/[^0-9]*//g')" != "0" ]]; then
             # vwc seems available, so try to enable the feature
-            echo " $(nvme set-feature -f 6 -v 1 /dev/$blockDev)"
+            vwcResult=$(nvme set-feature -f 6 -v 1 /dev/$blockDev 2>&1)
+            # It's possible that the feature needs to be applied one level up (e.g. nvme0 instead of nvme0n1)
+            if [[ "$vwcResult" == *"FEATURE_NOT_PER_NS"* ]]; then
+                # Try to apply to the entire device
+                fullDev=$(echo $blockDev | sed 's/n[0-9]\+//g')
+                echo && echo /dev/$fullDev
+                nvme set-feature -f 6 -v 1 /dev/$fullDev
+            else
+                # Format the result similar to hdparm for consistency
+                echo && echo /dev/$blockDev:
+                echo "$vwcResult"
+            fi
         else
+            echo && echo /dev/$blockDev:
             echo " Volatile Write Cache not present"
         fi
         echo " write_cache: $(cat /sys/block/$blockDev/queue/write_cache)"
