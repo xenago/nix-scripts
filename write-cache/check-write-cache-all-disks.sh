@@ -20,7 +20,7 @@ do
     # Try a different method with nvme devices
     elif [[ "$blockDev" == "nvme"* ]]; then
         # Format the result similar to hdparm for consistency
-        echo /dev/$blockDev:
+        echo && echo /dev/$blockDev:
         # Check if the device has the 'vwc ' feature (the space filters out other features)
         if [[ "$(sudo nvme id-ctrl /dev/$blockDev | grep 'vwc ' | sed 's/[^0-9]*//g')" != "0" ]]; then
             # vwc seems available, so check for the status of the feature
