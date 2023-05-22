@@ -35,7 +35,7 @@ Enable write-caching:
 
 Check if `vwc` (Volatile Write Cache) is supported on NVMe devices:
 
-      nvme id-ctrl /dev/$blockDev | grep 'vwc '
+    nvme id-ctrl /dev/$blockDev | grep 'vwc '
 
 * Note: it seems like anything other than 0 for this parameter means that the feature is not required or supported (for example, with Optane)
 
