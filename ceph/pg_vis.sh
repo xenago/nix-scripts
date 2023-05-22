@@ -3,6 +3,7 @@
 # Command dependencies:
 # * ceph (provided by ceph-common package)
 # * jq
+# * sudo (if not root)
 
 # Description:
 # Useful script to sanity-check placement of data on hosts, ensuring PGs are spread as expected
@@ -38,10 +39,19 @@
 #       2 stor4
 # ...
 
+# If not root, become root (retaining environment variables)
+if [[ "$EUID" -ne 0 ]]; then
+    exec sudo -E "$0" "$@"
+fi
+
+# Pool name provided as launch argument
 echo "Displaying pg placement by host for pool: $1"
+
+# Iterate through PGs in the provided pool
 for pg in $(ceph pg ls-by-pool $1 -f json | jq -r '.pg_stats[].pgid'); do
- echo $pg
- for osd in $(ceph pg map $pg -f json | jq -r '.up[]'); do
-   ceph osd find $osd | jq -r '.host'
- done | sort | uniq -c | sort -n -k1
+    echo $pg
+    # Locate, count, and print OSDs on which the PG is placed
+    for osd in $(ceph pg map $pg -f json | jq -r '.up[]'); do
+        ceph osd find $osd | jq -r '.host'
+    done | sort | uniq -c | sort -n -k1
 done
