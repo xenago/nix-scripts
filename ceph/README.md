@@ -101,7 +101,11 @@ In this example, a 6+2 EC data pool on HDD will be created alongside a 3x replic
        ceph auth caps client.<read-only-username> mds 'allow r path=/' mon 'allow r' osd 'allow r tag cephfs data=cephfs_metadata, allow r pool=cephfs_data, allow r tag cephfs data=cephfs2_metadata, allow r pool=cephfs2_data'
        ceph auth caps client.<read-write-username> mds 'allow r path=/, allow rw path=/Media, allow rw path=/Share' mon 'allow r' osd 'allow rw tag cephfs data=cephfs_metadata, allow rw pool=cephfs_data, allow rw tag cephfs data=cephfs2_metadata, allow rw pool=cephfs2_data'
 
-7. Create a kernel mount on a client device:
+7. (Optional - not recommended) Change the default filesystem from the existing one to the new one:
+
+       ceph fs set-default cephfs2
+
+8. Create a kernel mount on a client device:
 
        sudo mkdir /mnt/cephfs2
 
@@ -113,7 +117,7 @@ In this example, a 6+2 EC data pool on HDD will be created alongside a 3x replic
 
        sudo mount /mnt/cephfs2
 
-8. Using the admin user, mount and create paths for users, then chown for them to allow access.
+9. Using the admin user, mount and create paths for users, then chown for them to allow access.
 
     Create a directory for mounting:
     
@@ -174,3 +178,7 @@ In this example, a 6+2 EC data pool on HDD will be created alongside a 3x replic
        ceph auth del client.<obsolete-username>
        ceph auth caps client.<read-only-username> mds 'allow r path=/' mon 'allow r' osd 'allow r tag cephfs data=cephfs2_metadata, allow r pool=cephfs2_data'
        ceph auth caps client.<read-write-username> mds 'allow r path=/, allow rw path=/Media, allow rw path=/Share' mon 'allow r' osd 'allow rw tag cephfs data=cephfs2_metadata, allow rw pool=cephfs2_data'
+
+9. (Optional) If the default file system was deleted, change it to the remaining one:
+
+       ceph fs set-default cephfs2
