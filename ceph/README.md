@@ -2,15 +2,21 @@
 
 Control and manage the Ceph storage system.
 
-# General Commands
+# General Notes
 
-Ceph status:
+Cephadm is the orchestrator assumed, but native commands can be used in most cases if the `ceph-common` package/tools are installed and sufficient permissions are available (as `root` or with `sudo`, for example).
+
+Cephadm-style `ceph status`:
 
     sudo cephadm shell ceph -s
 
+Traditional `ceph status`:
+
+    sudo ceph -s
+
 Ceph health:
 
-    sudo cephadm shell ceph health detail
+    ceph health detail
 
 # CephFS
 
@@ -22,7 +28,7 @@ In this example, a 6+2 EC data pool on HDD will be created alongside a 3x replic
 
 1. Allow multiple filesystems:
 
-       sudo cephadm shell ceph fs flag set enable_multiple true
+       ceph fs flag set enable_multiple true
 
 2. Create the pools, e.g. `cephfs2_data` and `cephfs2_metadata` in the dashboard with mostly default settings:
 
@@ -89,12 +95,12 @@ In this example, a 6+2 EC data pool on HDD will be created alongside a 3x replic
 
 4. Create the filesystem and 2 MDS (one for standby):
 
-       sudo cephadm shell ceph fs new cephfs2 cephfs2_metadata cephfs2_data --force
-       sudo cephadm shell ceph orch apply mds cephfs2 --placement="2"
+       ceph fs new cephfs2 cephfs2_metadata cephfs2_data --force
+       ceph orch apply mds cephfs2 --placement="2"
 
 5. Set the estimated size to help the autoscaler, e.g. 250 terabytes:
 
-       sudo cephadm shell ceph osd pool set cephfs2_data target_size_bytes 250T
+       ceph osd pool set cephfs2_data target_size_bytes 250T
 
 6. Authorize users for the new pool, retaining existing permissions:
 
@@ -163,8 +169,8 @@ In this example, a 6+2 EC data pool on HDD will be created alongside a 3x replic
 
 7. (Optional) Now that the pools are deleted, remove the unnecessary crushmap rules: 
 
-       cephadm shell --mount /home/<username> -- ceph osd getcrushmap -o /mnt/<username>/crushmap.compiled
-       cephadm shell --mount /home/<username> -- crushtool -d /mnt/<username>/crushmap.compiled -o /mnt/<username>/crushmap.text
+       sudo cephadm shell --mount /home/<username> -- ceph osd getcrushmap -o /mnt/<username>/crushmap.compiled
+       sudo cephadm shell --mount /home/<username> -- crushtool -d /mnt/<username>/crushmap.compiled -o /mnt/<username>/crushmap.text
        sudo nano ~/crushmap.text
 	
     Remove the rule(s) and save, then recompile and import:
