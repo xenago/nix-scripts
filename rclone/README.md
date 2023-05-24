@@ -15,8 +15,8 @@ Note: headless Ubuntu or Debian is assumed but should work similarly anywhere.
 1. Install rclone:
 
        sudo su
-       curl https://rclone.org/install.sh | sudo bash
-       exit sudo
+       curl https://rclone.org/install.sh | bash
+       exit
 
 2. On server, create a config for dropbox:
 
