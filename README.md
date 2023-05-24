@@ -6,6 +6,7 @@ WIP project to collect and publish my notes/tools.
 
 ## Index
 
+* [Ceph](ceph)
+* [Rclone](rclone)
 * [SSH](ssh)
 * [Write Caching](write-cache)
-* [Ceph](ceph)
