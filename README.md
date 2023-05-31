@@ -7,6 +7,7 @@ WIP project to collect and publish my notes/tools.
 ## Index
 
 * [Ceph](ceph)
+* [P2P](p2p)
 * [Rclone](rclone)
 * [SSH](ssh)
 * [VPN](vpn)
