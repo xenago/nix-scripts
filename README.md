@@ -9,4 +9,5 @@ WIP project to collect and publish my notes/tools.
 * [Ceph](ceph)
 * [Rclone](rclone)
 * [SSH](ssh)
+* [VPN](vpn)
 * [Write Caching](write-cache)
