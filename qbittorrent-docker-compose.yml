@@ -1,0 +1,16 @@
+  qbittorrent:
+    image: linuxserver/qbittorrent:4.4.3.1-r1-ls205
+    container_name: qbittorrent
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Toronto
+      - WEBUI_PORT=8181
+    volumes:
+      - "<path>/qbittorrent/config:/config"
+      - "<path>/shared:/shared"
+    ports:
+      - 8181:8181
+      - 6881:6881
+      - 6881:6881/udp
+    restart: always
