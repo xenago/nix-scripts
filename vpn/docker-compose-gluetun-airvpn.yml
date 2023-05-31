@@ -1,0 +1,15 @@
+version: "3"
+services:
+  gluetun:
+    image: qmcgaw/gluetun
+	container_name: gluetun
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - VPN_SERVICE_PROVIDER=airvpn
+      - VPN_TYPE=wireguard
+      - WIREGUARD_PRIVATE_KEY=yCbH....kJgX2c=
+      - WIREGUARD_PRESHARED_KEY=yCbHtKAg....kJgX2c= \
+      - WIREGUARD_ADDRESSES=10.99.99.99/32,ff:ff:ff...:ff/128
+    ports:
+      - "8080:8080" # Port to be forwarded and made available on the Docker host, for example a local-only webapp
