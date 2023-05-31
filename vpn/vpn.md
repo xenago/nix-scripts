@@ -16,6 +16,13 @@ Usage of [AirVPN](https://airvpn.org/) with [Gluetun](https://github.com/qdm12/g
     1. Provided keys
     2. Provided IP range(s) (remove IPv4 or IPv6 if both are not being used by WireGuard)
     3. Internal forwarded ports (i.e. forward some ports you want to access on the docker host directly, such as a local Web UI for a P2P client)
+    4. Optional environment variables:
+
+            SERVER_COUNTRIES: Comma separated list of countries
+            SERVER_REGIONS: Comma separated list of regions
+            SERVER_CITIES: Comma separated list of cities
+            SERVER_NAMES: Comma separated list of server names
+            SERVER_HOSTNAMES: Comma separated list of server hostnames
 
 6. To connect a container, add line to compose config: `network_mode: "service:gluetun"`
 7. To validate IP in VPN container, it is convenient to use a third party service with the included `wget` binary, e.g. `sudo docker exec -it gluetun wget -qO- ifconfig.io`
