@@ -11,7 +11,10 @@ Use of [containerized lsio qBittorrent](https://hub.docker.com/r/linuxserver/sab
     * Using a shared folder as the main volume root for downloaded files is [recommended](https://wiki.servarr.com/docker-guide#consistent-and-well-planned-paths), to enable efficient movement of files by different trusted containers
 
           mkdir -p <path>/qbittorrent/config
-          mkdir -p <path>/shared/torrent
+          mkdir -p <path>/shared/torrent/backup
+          mkdir -p <path>/shared/torrent/complete
+          mkdir -p <path>/shared/torrent/incomplete
+          mkdir -p <path>/shared/torrent/load
 
 2. Add or create based on [`qbittorrent-docker-compose.yml`](qbittorrent-docker-compose.yml)
 
@@ -19,7 +22,7 @@ Use of [containerized lsio qBittorrent](https://hub.docker.com/r/linuxserver/sab
     * If used with a VPN container, then set it in the compose file, e.g. `network_mode: "service:gluetun"`
     * If used with a VPN and the Web UI/API is being used, then forward that port at the VPN container instead
 
-3. Forward a port (e.g. TCP 6881) to the container for use with Bittorrent
+3. Forward a port (e.g. 6881/tcp) to the container for use with Bittorrent
 
   * If used with a VPN, the service should support port-forwarding and that should be configured with your VPN service provider and in your VPN client
   * If not used with a VPN, forward the port in your router or firewall
