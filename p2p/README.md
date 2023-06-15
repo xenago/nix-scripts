@@ -19,7 +19,12 @@ Use of [containerized lsio qBittorrent](https://hub.docker.com/r/linuxserver/sab
 2. Add or create based on [`qbittorrent-docker-compose.yml`](qbittorrent-docker-compose.yml)
 
     * Make sure to use a recent, updated container release (I prefer the `libtorrentv1` branch of releases as they have more manageable RAM usage)
-    * If used with a VPN container, then set it in the compose file, e.g. `network_mode: "service:gluetun"`
+    * If used with a VPN container, then set it in the compose file, e.g.
+
+          network_mode: "service:gluetun"
+          depends_on:
+            - gluetun
+
     * If used with a VPN and the Web UI/API is being used, then forward that port at the VPN container instead
 
 3. Forward a port (e.g. 6881/tcp) to the container for use with Bittorrent
