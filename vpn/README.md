@@ -25,6 +25,11 @@ Usage of [AirVPN](https://airvpn.org/) with [Gluetun](https://github.com/qdm12/g
            SERVER_HOSTNAMES: Comma separated list of server hostnames
 
 6. To connect a container, add line to compose config: `network_mode: "service:gluetun"`
-7. To access a port on a container from within the gluetun network, use the gluetun container hostname, e.g. `gluetun:8080`
-8. To validate IP in VPN container, it is convenient to use a third party service with the included `wget` binary, e.g. `sudo docker exec -it gluetun wget -qO- ifconfig.io`
-9. To validate IP in a client container, sometimes `curl` is available instead, e.g. `sudo docker exec -ti qbittorrent curl ifconfig.io`
+    * Adding a `depends_on` link to the `gluetun` container is recommended to ensure containers remain functional:
+   
+          depends_on:
+            - gluetun
+
+8. To access a port on a container from within the gluetun network, use the gluetun container hostname, e.g. `gluetun:8080`
+9. To validate IP in VPN container, it is convenient to use a third party service with the included `wget` binary, e.g. `sudo docker exec -it gluetun wget -qO- ifconfig.io`
+10. To validate IP in a client container, sometimes `curl` is available instead, e.g. `sudo docker exec -ti qbittorrent curl ifconfig.io`
