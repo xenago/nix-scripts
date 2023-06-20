@@ -84,7 +84,8 @@ Note: headless Ubuntu or Debian is assumed but should work similarly anywhere.
               --vfs-read-chunk-size-limit=4G \
               --dir-cache-time=5m0s \
               --tpslimit=10 \
-              --bwlimit=60M \
+              --tpslimit-burst=20 \
+              --bwlimit=120M \
               --rc \
               --rc-web-gui \
               --rc-addr=<local-ip>:5572 \
