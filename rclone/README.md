@@ -37,7 +37,7 @@ Note: headless Ubuntu or Debian is assumed but should work similarly anywhere.
 
     Set the password and salt, save in your key store/password manager.
 
-5. At this point, it is possible to copy files to and from the remote.
+5. At this point, it is possible to copy files to and from the remote. Due to [Dropbox limitations](https://help.dropbox.com/organize/file-names), with rclone encryption file/folder names must not exceed [143 characters](https://forum.rclone.org/t/problem-with-deep-paths-dropbox/14822/3) in length.
 
    For example, this will create a folder called `myfiles` in the encrypted drive:
   
