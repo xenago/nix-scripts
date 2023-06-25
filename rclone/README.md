@@ -106,7 +106,8 @@ Note: headless Ubuntu or Debian is assumed but should work similarly anywhere.
       * `--allow-other` enables other users to access (generally, read) the mounted disk
       * Set the `gid` and `uid` to match your user account and ensure write access (see previous step)
       * Cache is off in this example - files are uploaded without taking up space on the actual disk, but if uploads fail they won't be retried since they are uncached
-      * Set `--vfs-cache-mode=writes` instead of `off` for proper full read-write access to the disk (like Google Drive desktop) but this will consume local disk space for files until they are uploaded
+      * Set `--vfs-cache-mode=writes` instead of `off` for proper full read-write access to the disk (like Google Drive desktopdoes) - this will rectify file access issues but consume local disk space for files until they are closed or uploaded
+        * There are ways to limit this, like `vfs-cache-max-size`, but they are imperfect
       * Set `tpslimit` to control the number of api calls/queries per second
       * Set `bwlimit` to control the max permitted bandwidth
       * Set `dir-cache-time` to control how long rclone will assume the contents of a directory are valid after last access
