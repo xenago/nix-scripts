@@ -156,6 +156,6 @@ Note: it is recommended to use the Google Cloud console to create a Drive API pr
 
        rclone copy --progress --verbose --dry-run "gsuite:sourcepath" "dropbox_crypt:destpath"
 
-5. If connected over ssh, run the actual sync inside a tool like `tmux` or `screen` to avoid disconnections killing the transer
+5. If connected over ssh, it is recommended to run the actual sync inside a tool like `tmux` or `screen` to avoid disconnections killing the transfer, but that is optional:
 
        rclone copy -P -v --tpslimit=10 --bwlimit=120M --size-only --dry-run "gsuite:sourcepath" "dropbox_crypt:destpath"
