@@ -122,3 +122,40 @@ Note: headless Ubuntu or Debian is assumed but should work similarly anywhere.
 5. Check that you can view and read the files:
 
        ls /mnt/dropbox_crypt
+
+## Syncing between providers (e.g. Google Drive to Dropbox)
+
+Note: it is recommended to use the Google Cloud console to create a Drive API project in order to get OAuth credentials for use with rclone
+
+1. Create rclone config entries for the providers in use. In this example, I will sync from a plaintext Google Drive remote called `gsuite` to an encrypted Dropbox called `dropbox_crypt`.
+
+2. Determine if syncing or copying to the destination, since there are tradeoffs between either option.
+
+3. Determine [parameters](https://rclone.org/flags/) to use depending on needs:
+
+    * `--buffer-size=64Mi`
+      * Amount to buffer files read when transferring (default 16Mi)
+    * `--bwlimit=120M`
+      * Control bandwidth usage
+    * `--ignore-existing`
+      * Do not copy files if they already exist on the destination
+    * `--progress`
+      * Track the transfer in real time
+    * `--size-only`
+      * Compare using file size rather than checksum
+    * `--tpslimit=3 --tpslimit-burst=3`
+      * Limit how hard the APIs/filesystem will be hit every second (default 1)
+    * `--transfers=3`
+      * Set the number of files to be worked on in parallel (default 4)
+    * `--update`
+      * Skip files that are newer on the destination
+    * `--verbose`
+      * Show some debug info
+
+4. Perform a dry run
+
+       rclone copy --progress --verbose --dry-run "gsuite:sourcepath" "dropbox_crypt:destpath"
+
+5. If connected over ssh, run the actual sync inside a tool like `tmux` or `screen` to avoid disconnections killing the transer
+
+       rclone copy -P -v --tpslimit=10 --bwlimit=120M --size-only --dry-run "gsuite:sourcepath" "dropbox_crypt:destpath"
