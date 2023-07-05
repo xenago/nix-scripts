@@ -2,7 +2,7 @@
 
 Usage of rclone for interaction with remote storage.
 
-## Basic usage with Dropbox
+## Usage with Dropbox
 
 The idea is to create a regular rclone API connection to Dropbox, and then another rclone connection on top of that with encryption enabled.
 This will permit uploading and downloading encrypted files which are only readable easily using rclone.
@@ -159,3 +159,7 @@ Note: it is recommended to use the Google Cloud console to create a Drive API pr
 5. If connected over ssh, it is recommended to run the actual sync inside a tool like `tmux` or `screen` to avoid disconnections killing the transfer, but that is optional:
 
        rclone copy -P -v --tpslimit=10 --bwlimit=120M --size-only --dry-run "gsuite:sourcepath" "dropbox_crypt:destpath"
+
+## Usage with Google Drive
+
+When using Google Drive, it is typically useful to pass the `--drive-acknowledge-abuse` flag since Google blocks some files otherwise.
