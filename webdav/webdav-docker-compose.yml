@@ -1,0 +1,23 @@
+version: '3'
+services:
+  webdav:
+    image: dgraziotin/nginx-webdav-nononsense:1.25.1
+    container_name: webdav
+    hostname: webdav
+    restart: always
+    volumes:
+        - "/containers/keeweb-webdav/config:/config"
+        - "/data/a directory to share:/data/something to share"
+        - "/mnt/something/else:/data/Different-folder"
+    environment:
+        - PUID=1000
+        - PGID=1000
+        - TZ=America/Toronto
+        - WEBDAV_USERNAME=user
+        - WEBDAV_PASSWORD=password
+        - SERVER_NAMES=webdav.domain.com
+        - TIMEOUT_S=12000
+        - CLIENT_MAX_BODY_SIZE=1G
+    ports:
+      - 8099:80
+    network_mode: bridge
