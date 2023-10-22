@@ -8,6 +8,7 @@ WIP project to collect and publish my notes/tools.
 
 * [Ceph](ceph)
 * [Containers](containers)
+* [KeePass](keepass)
 * [P2P](p2p)
 * [Rclone](rclone)
 * [SSH](ssh)
