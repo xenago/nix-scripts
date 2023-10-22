@@ -1,10 +1,16 @@
 # keepass
 
-Related to the use of `KeePass`.
+Related to the use of `KeePass`, an open standard for password storage. KeePass is particularly useful when paired with [`WebDAV`](../webdav) for remote storage of the password database.
+
+## `KeePass2Android`
+
+[KeePass2Android](https://play.google.com/store/apps/details?id=keepass2android.keepass2android) is the most useful Android client compatible with KeePass databases.
 
 ## `KeeWeb`
 
-This is generally the most useful cross-platform KeePass client, even though it is not really maintained currently. Use of [containerized `KeeWeb`](https://hub.docker.com/r/antelle/keeweb) that is [useful alongside `WebDAV`](../webdav). Although [other versions](https://github.com/keeweb/keeweb) are available as well, self-hosting is preferable.
+This is generally the most useful cross-platform KeePass client, even though it is not really maintained currently.
+
+These steps cover the [containerized hosting](https://hub.docker.com/r/antelle/keeweb) of [`KeeWeb`](https://github.com/keeweb/keeweb) - it can be used via other means as well, such as the desktop app.
 
 1. Add or create based on [`keeweb-docker-compose.yml`](keeweb-docker-compose.yml)
 
