@@ -10,6 +10,7 @@ WIP project to collect and publish my notes/tools.
 * [Containers](containers)
 * [KeePass](keepass)
 * [P2P](p2p)
+* [PCIe](pci)
 * [Rclone](rclone)
 * [SSH](ssh)
 * [VPN](vpn)
