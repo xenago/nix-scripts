@@ -2,6 +2,11 @@
 
 Control and manage the Ceph storage system.
 
+# Links
+
+* [Bug tracker/roadmap](https://tracker.ceph.com/projects/ceph/roadmap), useful for tracking upcoming releases
+* [Latest releases](https://docs.ceph.com/en/latest/releases/#release-timeline), useful for viewing active releases and support timelines
+
 # General Notes
 
 Cephadm is the orchestrator assumed, but native commands can be used in most cases if the `ceph-common` package/tools are installed and sufficient permissions are available (as `root` or with `sudo`, for example).
