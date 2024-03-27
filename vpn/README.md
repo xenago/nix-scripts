@@ -69,8 +69,9 @@ Edit it before starting the container:
     server_url: https://headscale.domain.com
     listen_addr: 0.0.0.0:8080
     metrics_listen_addr: 0.0.0.0:9090
+    # grpc is optional and not enabled by default, can omit this
     grpc_listen_addr: 0.0.0.0:50443
-    # The default /var/lib/headscale path is not writable  in the container
+    # The default /var/lib/headscale path is not writable in the container
     noise:
       private_key_path: /etc/headscale/noise_private.key
     derp:
@@ -81,7 +82,7 @@ Edit it before starting the container:
 
 Start it up:
 
-    docker compose -f /home/blikvm/containers/headscale/docker-compose.yml up -d
+    docker compose -f /home/<username>/containers/headscale/docker-compose.yml up -d
 
 Create an API Key:
 
