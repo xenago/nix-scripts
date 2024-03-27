@@ -1,0 +1,19 @@
+services:
+  headscale:
+    image: headscale/headscale:0.23.0-alpha5
+    restart: unless-stopped
+    container_name: headscale
+    ports:
+      - "0.0.0.0:8080:8080"
+      - "0.0.0.0:9090:9090"
+    volumes:
+      - /home/<username>/containers/headscale/config:/etc/headscale
+    command: serve
+  headscale-ui:
+    image: ghcr.io/gurucomputing/headscale-ui:2024.02.24-beta1
+    restart: unless-stopped
+    container_name: headscale-ui
+    ports:
+      - 9443:443
+    environment:
+      - HTTPS_PORT:9443
