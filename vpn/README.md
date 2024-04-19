@@ -106,6 +106,6 @@ Permit IP forwarding:
 Run the client to advertise as an exit node:
 
     curl -fsSL https://tailscale.com/install.sh | sh
-    sudo tailscale up --login-server=https://headscale.domain.com --advertise-routes=192.168.1.0/24
+    sudo tailscale up --login-server=https://headscale.domain.com --advertise-routes=192.168.1.0/24 --accept-dns=false
 
 Back in the web UI, go to the device and enable the exit node under `Device Routes`.
