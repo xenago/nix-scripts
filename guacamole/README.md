@@ -32,7 +32,7 @@ Note: only works on x86 for now.
 
 6. Copy the initialization script into the container:
 
-       docker cp initdb.sql mariadb:/guac_db.sql
+       docker cp initdb.sql guac-db:/guac_db.sql
 
 7. Open a shell in the container:
 
