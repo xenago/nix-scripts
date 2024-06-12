@@ -6,6 +6,7 @@ WIP project to collect and publish my notes/tools.
 
 ## Index
 
+* [Apache Guacamole](guacamole)
 * [Ceph](ceph)
 * [Containers](containers)
 * [KeePass](keepass)
