@@ -20,7 +20,7 @@ Note: only works on x86 for now.
 
 3. Start mariadb:
 
-       docker-compose up -d guac-db
+       docker compose up -d guac-db
 
 4. Watch the logs:
 
@@ -28,7 +28,7 @@ Note: only works on x86 for now.
 
 5. Once it has started, remove the environment variable section from the config and start it again:
 
-       docker-compose up -d guac-db
+       docker compose up -d guac-db
 
 6. Copy the initialization script into the container:
 
@@ -60,7 +60,7 @@ Note: only works on x86 for now.
 
 10. Start the other containers up:
 
-        docker-compose up -d
+        docker compose up -d
 
 11. Once logged in, you can set up RDP and ssh. Use the default credentials:
 
