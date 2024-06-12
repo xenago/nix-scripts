@@ -9,10 +9,10 @@ Note: only works on x86 for now.
 1. Edit the compose file: 
 
   * Replace `192.168.1.19` with the host IP address (it may be possible to use other networking modes to avoid this, but I generally find it easiest to do this if the host has a static private ipv4 address)
-  * Add the temporary environment variable to set the root database password to `testing`:
+  * Add the temporary environment variable to set the root database password:
 
         environment:
-          - MYSQL_ROOT_PASSWORD=testing
+          - MYSQL_ROOT_PASSWORD=set-your-random-root-password-here
 
 2. Generate the db initialization script:
 
@@ -38,7 +38,7 @@ Note: only works on x86 for now.
 
        docker exec -it guac-db bash
 
-8. Create a new database and user as shown below with your preferred password, using the mysql (mariadb) console. Log in using the mariadb root password, previously set to `testing`:
+8. Create a new database and user as shown below with your preferred password, using the mysql (mariadb) console. Log in using the mariadb root password, previously set:
 
        mysql -u root -p
        CREATE DATABASE guacamole_db;
@@ -56,7 +56,7 @@ Note: only works on x86 for now.
        exit  // should quit the mysql shell
        exit  // should quit the container
 
-9. Edit the compose file and update the IP/hostnames as preferred. Make sure to set the new mariadb password.
+9. Edit the compose file and update the IP/hostnames as preferred. Make sure to set the new mariadb guacamole password.
 
 10. Start the other containers up:
 
