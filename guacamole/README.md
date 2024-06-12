@@ -71,5 +71,5 @@ Note: only works on x86 for now.
 
 12. Change the password of the admin user
 
-13. Set up nginx (see `guacamole_site_nginx.conf`)
+13. Set up nginx (see `guacamole_site_nginx.conf`), replacing `192.168.1.19` with the guacamole container IP address (from the perspective of the nginx server). Make sure to generate certs with e.g. certbot.
 
