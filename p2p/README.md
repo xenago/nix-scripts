@@ -110,8 +110,8 @@ Use of [containerized lsio qBittorrent](https://hub.docker.com/r/linuxserver/sab
 
 ## bitmagnet DHT Indexer
 
-See the repo: https://github.com/bitmagnet-io/bitmagnet
+View the repo: https://github.com/bitmagnet-io/bitmagnet
 
 Note that it is hard on the disk: https://github.com/bitmagnet-io/bitmagnet/issues/186#issuecomment-2008355432
 
-See the `bitmagnet-docker-compose.yml` file. Note that it is best used in conjunction with a VPN (doesn't seem to need port forwarding, works fine with VPN Unlimited for example).
+See the `bitmagnet-docker-compose.yml` file. Note that it is best used in conjunction with a VPN (doesn't seem to need port forwarding, works fine with VPN Unlimited for example). Check your network as it is configured for `192.168.55.0/24`.
