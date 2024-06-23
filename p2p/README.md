@@ -107,3 +107,11 @@ Use of [containerized lsio qBittorrent](https://hub.docker.com/r/linuxserver/sab
        disabledEngines=eztv, limetorrents, torlock
 
 6. If the Web UI/HTTP port is being used, use a reverse proxy to encrypt the traffic. A sample nginx config is available: ([`qb.nginx.conf`](qb.nginx.conf))
+
+## bitmagnet DHT Indexer
+
+See the repo: https://github.com/bitmagnet-io/bitmagnet
+
+Note that it is hard on the disk: https://github.com/bitmagnet-io/bitmagnet/issues/186#issuecomment-2008355432
+
+See the `bitmagnet-docker-compose.yml` file. Note that it is best used in conjunction with a VPN (doesn't seem to need port forwarding, works fine with VPN Unlimited for example).
