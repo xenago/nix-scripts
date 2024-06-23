@@ -1,0 +1,200 @@
+services:
+
+  bitmagnet:
+    container_name: bitmagnet
+    image: ghcr.io/bitmagnet-io/bitmagnet:v0.9.3
+    volumes:
+      # Mount data folder (currently only used for logs when file rotation is enabled):
+      - /home/noah/containers/bitmagnet/bitmagnet:/root/.local/share/bitmagnet
+    restart: unless-stopped
+    environment:
+      # Enable logging to rotating files for ingest to Loki:
+      - LOG_FILE_ROTATOR_ENABLED=true
+      - POSTGRES_HOST=bitmagnet-postgres
+      - POSTGRES_PASSWORD=postgres
+      # - TMDB_API_KEY=your_api_key
+      - DHT_CRAWLER_SAVE_FILES_THRESHOLD=500000
+    network_mode: service:bitmagnet-gluetun
+    depends_on:
+      bitmagnet-postgres:
+        condition: service_healthy
+    command:
+      - worker
+      - run
+      # Run all workers:
+      - --all
+      # Or enable individual workers:
+      # - --keys=http_server
+      # - --keys=queue_server
+      # - --keys=dht_crawler
+
+  bitmagnet-gluetun:
+    container_name: bitmagnet-gluetun
+    image: qmcgaw/gluetun:v3.38.0
+    cap_add:
+      - NET_ADMIN
+    ports:
+      # The bitmagnet ports must be exposed by the gluetun container:
+      - "3333:3333"
+      # BitTorrent ports:
+      - "3334:3334/tcp"
+      - "3334:3334/udp"
+    environment:
+      # Put your personal gluetun/VPN account config and credentials here:
+      # (See https://github.com/qdm12/gluetun-wiki/tree/main/setup/providers)
+      - VPN_SERVICE_PROVIDER=custom
+      - VPN_TYPE=wireguard
+      - VPN_ENDPOINT_IP=
+      - VPN_ENDPOINT_PORT=
+      - WIREGUARD_PUBLIC_KEY=
+      - WIREGUARD_PRIVATE_KEY=
+      - WIREGUARD_PRESHARED_KEY=
+      - WIREGUARD_ADDRESSES=
+    restart: always
+    # Host names must be manually mapped here for bitmagnet to resolve them:
+    extra_hosts:
+      - "bitmagnet-postgres:192.168.55.11"
+    networks:
+      bitmagnet:
+        ipv4_address: 192.168.55.10
+
+  bitmagnet-postgres:
+    image: postgres:16-alpine
+    container_name: bitmagnet-postgres
+    volumes:
+      - /home/noah/containers/bitmagnet/postgres:/var/lib/postgresql/data
+    networks:
+      bitmagnet:
+        ipv4_address: 192.168.55.11
+#    ports:
+#      - "5432:5432"
+    shm_size: 1g
+    restart: unless-stopped
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=bitmagnet
+      - PGUSER=postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      start_period: 20s
+
+  # Optional observability services:
+  # (ensure you have the config files in the `observability` directory in your project root)
+
+  # Visualization and dashboards:
+  bitmagnet-grafana:
+    container_name: bitmagnet-grafana
+    image: grafana/grafana:latest
+    environment:
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+    volumes:
+      - /home/noah/containers/bitmagnet/grafana:/var/lib/grafana
+      # Provisioned data sources and dashboards:
+      - /home/noah/containers/bitmagnet/observability/grafana.datasources.yaml:/etc/grafana/provisioning/datasources/da>      - /home/noah/containers/bitmagnet/observability/grafana.dashboards.yaml:/etc/grafana/provisioning/dashboards/dash>      - /home/noah/containers/bitmagnet/observability/grafana-dashboards:/etc/dashboards
+#    ports:
+#      - "3000:3000"
+    networks:
+      - bitmagnet
+
+  # Metrics and logs scraping:
+  bitmagnet-grafana-agent:
+    container_name: bitmagnet-grafana-agent
+    image: grafana/agent:latest
+    volumes:
+      - /home/noah/containers/bitmagnet/grafana/logs:/var/log/bitmagnet
+      # Mount the logs and metrics scraping configurations:
+      - /home/noah/containers/bitmagnet/observability/grafana-agent.config.river:/etc/agent-config/config.river
+    command:
+      - run
+      - /etc/agent-config/config.river
+      - --server.http.listen-addr=0.0.0.0:12345
+    environment:
+      HOSTNAME: grafana-agent
+      AGENT_MODE: flow
+      LOKI_HOST: loki:3100
+      POSTGRES_HOST: bitmagnet-postgres:5432
+      REDIS_HOST: redis:6379
+    # The bitmagnet host must be mapped to the gluetun container:
+    extra_hosts:
+      - "bitmagnet:192.168.55.10"
+#    ports:
+#      - "12345:12345"
+    depends_on:
+      - bitmagnet-gluetun
+      - bitmagnet-loki
+    networks:
+      - bitmagnet
+
+  # Metrics storage and aggregation:
+  bitmagnet-prometheus:
+    image: prom/prometheus:latest
+    container_name: bitmagnet-prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+#    ports:
+#      - 9091:9090
+    # The bitmagnet host must be mapped to the gluetun container:
+    extra_hosts:
+      - "bitmagnet:192.168.55.10"
+    restart: unless-stopped
+    volumes:
+      - /home/noah/containers/bitmagnet/prometheus:/prometheus
+      - /home/noah/containers/bitmagnet/observability/prometheus.config.yaml:/etc/prometheus/prometheus.yml
+    networks:
+      - bitmagnet
+
+  # Log storage and aggregation:
+  bitmagnet-loki:
+    container_name: bitmagnet-loki
+    image: grafana/loki:latest
+#    ports:
+#      - "3100:3100"
+    volumes:
+      - /home/noah/containers/bitmagnet/loki:/loki
+      - /home/noah/containers/bitmagnet/observability/loki.config.yaml:/etc/loki/local-config.yaml
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - bitmagnet
+
+  # Runtime profiling:
+  pyroscope:
+    container_name: bitmagnet-pyroscope
+    image: grafana/pyroscope:latest
+    deploy:
+      restart_policy:
+        condition: on-failure
+#    ports:
+#      - "4040:4040"
+    command:
+      - "server"
+    volumes:
+      - /home/noah/containers/bitmagnet/pyroscope:/var/lib/pyroscope
+      - /home/noah/containers/bitmagnet/observability/pyroscope.config.yaml:/etc/pyroscope/server.yaml
+    networks:
+      - bitmagnet
+
+  # Prometheus metrics for Postgres:
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:latest
+    container_name: bitmagnet-postgres-exporter
+#    ports:
+#      - 9187:9187
+    environment:
+      DATA_SOURCE_NAME: "postgresql://postgres:postgres@bitmagnet-postgres:5432/bitmagnet?sslmode=disable"
+    links:
+      - bitmagnet-postgres
+      - bitmagnet-prometheus
+    networks:
+      - bitmagnet
+
+networks:
+  bitmagnet:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.55.0/24
+          gateway: 192.168.55.1
