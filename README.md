@@ -17,3 +17,7 @@ WIP project to collect and publish my notes/tools.
 * [VPN](vpn)
 * [WebDAV](webdav)
 * [Write Caching](write-cache)
+
+## License
+
+License only applies to my content; any software packages mirrored within have their own licenses.
