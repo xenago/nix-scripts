@@ -8,6 +8,15 @@ Docker, podman, containerd, etc.
 
        docker-compose rm -s -v yourService
 
-2. Get a shell into a stubborn image:
+2. Get a shell into a stubborn image with entrypoint/cmd:
 
-       docker run --rm -it --entrypoint /bin/sh image-name -c sh
+       docker run --rm -it --entrypoint /bin/sh cloverdx/cloverdx-server:6.7.1 -c sh
+
+4. Keep a `compose` container running using a no-op process:
+
+       services:
+         my-container:
+           image: cloverdx/cloverdx-server:6.7.1
+           restart: always
+           entrypoint: /bin/sh
+           command: -c 'tail -f /dev/null'
