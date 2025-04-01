@@ -4,7 +4,9 @@ Useful commands and scripts for use on Linux (Debian/Ubuntu is assumed).
 
 WIP project to collect and publish my notes/tools.
 
-See also [win-scripts](https://github.com/xenago/win-scripts).
+See also:
+* [app-scripts](https://github.com/xenago/app-scripts)
+* [win-scripts](https://github.com/xenago/win-scripts)
 
 ## Index
 
