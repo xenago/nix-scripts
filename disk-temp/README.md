@@ -19,7 +19,7 @@ Ultimately, a replacement is possible.
 
 3. Enable the module permanently, e.g.
 
-       echo drivetemp | sudo tee -a /etc/modules
+       echo drivetemp | sudo tee /etc/modules-load.d/drivetemp.conf
 
 4. Download and run the script, e.g.
 
