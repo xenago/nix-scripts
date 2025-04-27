@@ -24,5 +24,6 @@ Ultimately, a replacement is possible.
 4. Download and run the script, e.g.
 
        curl -sLO https://raw.githubusercontent.com/xenago/nix-scripts/refs/heads/main/disk-temp/disk-temp.sh
+       cat disk-temp.sh
        chmod +x disk-temp.sh
        ./disk-temp.sh
