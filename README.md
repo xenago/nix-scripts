@@ -13,6 +13,8 @@ See also:
 * [Apache Guacamole](guacamole)
 * [Ceph](ceph)
 * [Containers](containers)
+* [Disk Temperatures](disk-temp)
+* [Firefox](firefox)
 * [KeePass](keepass)
 * [P2P](p2p)
 * [PCIe](pci)
