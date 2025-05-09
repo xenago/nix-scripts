@@ -18,6 +18,7 @@ See also:
 * [PCIe](pci)
 * [Rclone](rclone)
 * [SSH](ssh)
+* [tmux](tmux)
 * [VPN](vpn)
 * [WebDAV](webdav)
 * [Write Caching](write-cache)
