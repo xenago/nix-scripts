@@ -21,6 +21,7 @@ See also:
 * [Rclone](rclone)
 * [SSH](ssh)
 * [tmux](tmux)
+* [vi](vi)
 * [VPN](vpn)
 * [WebDAV](webdav)
 * [Write Caching](write-cache)
