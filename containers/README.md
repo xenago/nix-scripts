@@ -2,17 +2,29 @@
 
 Docker, podman, containerd, etc.
 
-## Useful docker-related commands
+## Docker-related commands
 
-1. The equivalent of `docker compose down` but for a single container, useful if e.g. a hash is prepended to the name for some reason and you want to clean it up by recreating the container:
+Useful with docker and other associated tooling.
 
-       docker-compose rm -s -v yourService
+### Take down a single container started by compose
 
-2. Get a shell into a stubborn image with entrypoint/cmd:
+The equivalent of `docker compose down` but for a single container, useful if e.g. a hash is prepended to the name for some reason and you want to clean it up by recreating the container:
 
-       docker run --rm -it --entrypoint /bin/sh cloverdx/cloverdx-server:6.7.1 -c sh
+    docker-compose rm -s -v my-container
 
-4. Keep a `compose` container running using a no-op process:
+### Get a shell into an image with entrypoint/cmd
+
+Sometimes images are stubborn and annoying to just get a simple shell running, but this usually works:
+
+    docker run --rm -it --entrypoint /bin/sh cloverdx/cloverdx-server:6.7.1 -c sh
+
+## Docker Compose notes
+
+Useful when managing containers with Docker Compose.
+
+### Keep a container running using a no-op process
+
+Sometimes a container will quit immediately upon starting, which is not helpful if you want to actively have the environment 'up' for some reason. This allows for a container to be brought up as a kind of blank zombie without the usual PID 1 starting.
 
        services:
          my-container:
@@ -20,3 +32,24 @@ Docker, podman, containerd, etc.
            restart: always
            entrypoint: /bin/sh
            command: -c 'tail -f /dev/null'
+
+### Control startup order
+
+It is possible to specifically control startup order of containers to prevent them from starting before another is healthy, for example.
+
+https://docs.docker.com/compose/how-tos/startup-order/
+
+https://stackoverflow.com/questions/31746182/docker-compose-wait-for-container-x-before-starting-y
+
+In this example, the first container waits for another container named `my-one-shot-container` to finish successfully before it can start, and the second container waits for another container to be up and running before it can start:
+
+    services:
+      my-container:
+        depends_on:
+          my-one-shot-container:
+            condition: service_completed_successfully
+      another-container:
+        depends_on:
+          my-long-running-container:
+            condition: service_healthy
+
