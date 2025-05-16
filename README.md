@@ -19,6 +19,7 @@ See also:
 * [P2P](p2p)
 * [PCIe](pci)
 * [Rclone](rclone)
+* [Shell/Bash](shell)
 * [SSH](ssh)
 * [tmux](tmux)
 * [vi](vi)
