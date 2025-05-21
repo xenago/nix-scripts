@@ -53,3 +53,36 @@ In this example, the first container waits for another container named `my-one-s
           my-long-running-container:
             condition: service_healthy
 
+## Troubleshooting
+
+### Force docker service to start after mount is available
+
+1. Check for mounts:
+
+       systemctl list-unit-files | grep "\.mount "
+
+Override the service - run `sudo systemctl edit docker.service` and add:
+
+    [Unit]
+    Requires=YOUR_MOUNT.mount
+    After=YOUR_MOUNT.mount
+
+### Resolve `Cannot connect to the Docker daemon at unix:///var/run/docker.sock` error
+
+1. Ensure `/var/run/docker.sock` is not a directory (if so, delete it)
+2. Override the service and add the socket manually:
+
+   https://superuser.com/a/1852442
+
+   Run `sudo systemctl edit docker.service` and add:
+       
+       [Service]
+       ExecStart=
+       ExecStart=/usr/bin/dockerd -H unix:///var/run/docker.sock -H fd:// --containerd=/run/containerd/containerd.sock
+
+   Run `sudo systemctl daemon-reload` to pick up the changes.
+
+3. Restart the service:
+
+       sudo systemctl reset-failed docker
+       sudo systemctl restart docker
