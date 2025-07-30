@@ -10,12 +10,13 @@ See also:
 
 ## Index
 
-* [Apache Guacamole](guacamole)
 * [Ceph](ceph)
 * [Containers](containers)
 * [Disk Temperatures](disk-temp)
 * [Firefox](firefox)
+* [Guacamole](guacamole)
 * [KeePass](keepass)
+* [nano](nano)
 * [P2P](p2p)
 * [PCIe](pci)
 * [Rclone](rclone)
@@ -29,4 +30,4 @@ See also:
 
 ## License
 
-License only applies to my content; any software packages mirrored within have their own licenses.
+License only applies to my content; any other files mirrored within have their own licenses.
