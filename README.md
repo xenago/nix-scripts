@@ -15,6 +15,7 @@ See also:
 * [Disk Temperatures](disk-temp)
 * [Firefox](firefox)
 * [Guacamole](guacamole)
+* [KDE Plasma](plasma)
 * [KeePass](keepass)
 * [nano](nano)
 * [P2P](p2p)
