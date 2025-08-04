@@ -11,6 +11,7 @@ See also:
 ## Index
 
 * [Ceph](ceph)
+* [Chromebook](chromebook)
 * [Containers](containers)
 * [Disk Temperatures](disk-temp)
 * [Firefox](firefox)
