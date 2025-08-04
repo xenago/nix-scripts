@@ -16,6 +16,8 @@ Alternatively, add to `~/.ssh/config`:
       HostName server
       HostKeyAlgorithms=+ssh-rsa
 
+Note: see also [Service commands](#service-commands) section below for the server-side configuration.
+
 ## General commands
 
 Generate key (press enter a few times):
