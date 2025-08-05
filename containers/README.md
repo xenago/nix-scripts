@@ -12,11 +12,23 @@ The equivalent of `docker compose down` but for a single container, useful if e.
 
     docker-compose rm -s -v my-container
 
-### Get a shell into an image with entrypoint/cmd
+### Open an interactive shell in a running container
 
-Sometimes images are stubborn and annoying to just get a simple shell running, but this usually works:
+    docker exec -it container-name sh
 
-    docker run --rm -it --entrypoint /bin/sh cloverdx/cloverdx-server:6.7.1 -c sh
+### Start a container with an interactive shell
+
+Most of the time, this should work:
+
+    docker run --rm --it container/image:latest sh
+
+Note: the `--rm` flag will clean up and delete the container when it exists; omit that to keep it listed in e.g. `docker ps -a`.
+
+### Bypass entrypoint/cmd when running
+
+Sometimes images are stubborn and annoying to just get a simple interactive root shell running, but this usually works:
+
+    docker run --rm -it -u root --entrypoint /bin/sh container/image:latest -c sh
 
 ## Docker Compose notes
 
@@ -53,6 +65,32 @@ In this example, the first container waits for another container named `my-one-s
           my-long-running-container:
             condition: service_healthy
 
+### Reasonable health checks
+
+Here is an example config with a working healthcheck for the official MariaDB container:
+
+    mariadb:
+      image: mariadb:10.11
+      container_name: mariadb
+      hostname: mariadb
+      environment:
+        - MARIADB_MYSQL_LOCALHOST_USER=1
+      restart: unless-stopped
+      volumes:
+        # Store data in a sibling folder away from the compose file
+        - ../data/mariadb/mysql:/var/lib/mysql
+      ports:
+        - 3306:3306
+      healthcheck:
+        test: ["CMD", "healthcheck.sh", "--su-mysql", "--connect", "--innodb_initialized"]
+        start_period: 20s
+        start_interval: 5s
+        interval: 30s
+        timeout: 5s
+        retries: 3
+
+Many container images have poorly-documented health checks or none built in at all, so the test command and setup will vary a lot.
+
 ## Troubleshooting
 
 ### Force docker service to start after mount is available
@@ -66,6 +104,8 @@ Override the service - run `sudo systemctl edit docker.service` and add:
     [Unit]
     Requires=YOUR_MOUNT.mount
     After=YOUR_MOUNT.mount
+
+Note: this will prevent docker from starting if the mountpoint fails. Be sure to take this into account when configuring the system!
 
 ### Resolve `Cannot connect to the Docker daemon at unix:///var/run/docker.sock` error
 
