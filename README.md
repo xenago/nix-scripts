@@ -1,6 +1,6 @@
 # nix-scripts
 
-Useful commands and scripts for use on Linux (Debian/Ubuntu is assumed).
+Useful commands and scripts for use on Linux. Debian/Ubuntu is generally assumed, though the majority is generalized.
 
 WIP project to collect and publish my notes/tools.
 
@@ -24,6 +24,7 @@ See also:
 * [Rclone](rclone)
 * [Shell/Bash](shell)
 * [SSH](ssh)
+* [sudo](sudo)
 * [tmux](tmux)
 * [vi](vi)
 * [VPN](vpn)
