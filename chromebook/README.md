@@ -9,3 +9,5 @@ To get audio working on supported Chromebook models, use the [`WeirdTreeThing/ch
 ## Keyboard
 
 To assign the correct layout in XKB (KDE assumed), import the `kxkbrc` file to `~/.config/kxbrc`.
+
+To enable a virtual touch keyboard, install `maliit-keyboard` and activate in `Settings > Keyboard > Virtual Keyboard`
