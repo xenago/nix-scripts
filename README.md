@@ -13,6 +13,7 @@ See also:
 * [Ceph](ceph)
 * [Chromebook](chromebook)
 * [Containers](containers)
+* [Disk Serial Numbers](disk-serials)
 * [Disk Temperatures](disk-temp)
 * [Firefox](firefox)
 * [Guacamole](guacamole)
