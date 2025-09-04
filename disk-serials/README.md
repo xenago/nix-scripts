@@ -2,6 +2,10 @@
 
   Display the serial numbers of disks in the system.
 
+## lsblk method
+
+    lsblk -o NAME,SERIAL
+
 ## hdparm method
 
 Install `hdparm`, e.g.
