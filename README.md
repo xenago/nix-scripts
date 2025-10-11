@@ -26,6 +26,7 @@ See also:
 * [Shell/Bash](shell)
 * [SSH](ssh)
 * [sudo](sudo)
+* [Swap](swap)
 * [tmux](tmux)
 * [vi](vi)
 * [VPN](vpn)
