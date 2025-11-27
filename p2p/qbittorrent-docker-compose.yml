@@ -1,7 +1,8 @@
 version: "3"
 services:
+  # Note that this assumes use of VPN via gluetun!
   qbittorrent:
-    image: linuxserver/qbittorrent:4.4.3.1-r1-ls205
+    image: linuxserver/qbittorrent:libtorrentv1-release-5.1.4_v1.2.20-ls97
     container_name: qbittorrent
     environment:
       - PUID=1000
@@ -11,7 +12,31 @@ services:
     volumes:
       - "<path>/qbittorrent/config:/config"
       - "<path>/shared:/shared"
-    ports:
-      - 8181:8181
-      - 6881:6881
     restart: always
+    network_mode: "service:gluetun"
+    depends_on:
+      - gluetun
+    # Use of healthcheck/autoheal required due to issues:
+    # https://github.com/qdm12/gluetun/discussions/1562
+    # https://github.com/qdm12/gluetun/issues/1277
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:$$WEBUI_PORT/api/v2/transfer/info | jq -e '.connection_status == \"connected\"' > /dev/null || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    labels:
+      autoheal: true
+
+  autoheal:
+    image: willfarrell/autoheal:1.2.0
+    container_name: autoheal
+    network_mode: none
+    restart: always
+    deploy:
+      replicas: 1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      # Polling interval is in seconds
+      - AUTOHEAL_INTERVAL=60
