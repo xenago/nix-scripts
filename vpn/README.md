@@ -2,6 +2,44 @@
 
 Related to the use of VPNs.
 
+## OpenVPN
+
+The OpenVPN ecosystem makes it absolutely certain that you won't be able to connect to an older but properly-configured VPN server due to mindless 'security' changes. I'm accessing TLS sites though my VPN, I don't care if the tunnel is `AES-128-CBC` and therefore slightly less private - just let me connect! It's way more secure to allow a valid user into the VPN, than it is to block them thinking that AES isn't secure enough. Availability is a cornerstone of security, this is plain insanity.
+
+### Connecting to a .ovpn file on KDE
+
+1. Install the prerequisites
+
+       sudo apt install network-manager-openvpn
+
+2. Import the VPN file and attempt to connect. You'll likely see it hang endlessly, rather than provide a usable error message.
+
+   Optionally, add the password to the connection. This is insecure.
+
+       sudo nmcli connection modify my-vpn-connection-name-here vpn.secrets 'password=mypasswordhere'
+
+3. Check the logs to see what is breaking, probably a cipher deemed as unsupported by an idiot who hasn't ever operated in the real world:
+
+       OPTIONS ERROR: failed to negotiate cipher with server.  Add the server's cipher ('AES-128-CBC') to --data-ciphers (currently 'AES-256-GCM:AES-128-GCM:CHACHA20-POLY1305') if you want to connect
+
+4. Update the Network Manager config
+
+       ls /etc/NetworkManager/system-connections/
+       sudo nano /etc/NetworkManager/system-connections/my-vpn-connection-name-here.nmconnection
+ 
+   Under the `[vpn]` section, add the missing cipher:
+
+       data-ciphers=AES-128-CBC
+
+   Set permissions
+
+       sudo chmod 600 /etc/NetworkManager/system-connections/my-vpn-connection-name-here.nmconnection
+
+5. Reload and connect (using CLI should show errors if any)
+
+       sudo nmcli connection reload
+       nmcli connection up "my-vpn-connection-name-here"
+
 ## AirVPN with Gluetun
 
 Usage of [AirVPN](https://airvpn.org/) with [Gluetun](https://github.com/qdm12/gluetun/wiki/AirVPN), to be accessed by [other containers](https://github.com/qdm12/gluetun/wiki/Connect-a-container-to-gluetun) with a forwarded port for use with e.g. [P2P software](https://hub.docker.com/r/linuxserver/qbittorrent).
