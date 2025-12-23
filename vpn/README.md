@@ -2,6 +2,14 @@
 
 Related to the use of VPNs.
 
+## Override network path when dealing with conflicting subnets
+
+It is a common problem to be on e.g. `192.168.1.x` locally, and also connected to a remote subnet with the same IP space. On linux, this can be temporarily worked around.
+
+For example, to connect to `192.168.1.20` over the VPN tunnel rather than the local network:
+
+`sudo route add 192.168.1.20 dev tun0`
+
 ## OpenVPN
 
 The OpenVPN ecosystem makes it absolutely certain that you won't be able to connect to an older but properly-configured VPN server due to mindless 'security' changes. I'm accessing TLS sites though my VPN, I don't care if the tunnel is `AES-128-CBC` and therefore slightly less private - just let me connect! It's way more secure to allow a valid user into the VPN, than it is to block them thinking that AES isn't secure enough. Availability is a cornerstone of security, this is plain insanity.
