@@ -13,7 +13,7 @@ set softwrap
 # Use 4 spaces for tabs
 set tabsize 4
 # Allow Ctrl+Z to suspend nano
-set suspendable
+bind ^Z suspend main
 # Syntax highlighting (Debian)
 include "/usr/share/nano/*.nanorc"
 # Enable regex search
