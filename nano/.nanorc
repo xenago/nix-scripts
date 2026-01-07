@@ -20,3 +20,5 @@ include "/usr/share/nano/*.nanorc"
 set regexp
 # Allow highlighted blocks of text (Ctrl+6/ALT+6) to be deleted
 set zap
+# Disable justify, which breaks clean pasting when enabled
+unbind ^J main
