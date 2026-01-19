@@ -50,15 +50,15 @@ It will look something like:
 
 To filter and manipulate, output in JSON and pipe into tools like `jq`:
 
-    docker compose ls --format json | jq -r 'if type=="array" then .[] else . end | .Name' | while read -r project; do     docker compose -p "$project" ps --all --format "{{.Project}}\t{{.Name}}\t{{.Image}}\t{{.Status}}"; done | column -t -s $'\t' -N STACK,CONTAINER,IMAGE,STATUS
+    docker compose ls --format json | jq -r 'if type=="array" then .[] else . end | .Name' | while read -r project; do docker compose -p "$project" ps --all --format "{{.Project}}\t{{.Name}}\t{{.Image}}\t{{.Status}}"; done | column -t -s $'\t' -N PROJECT,CONTAINER,IMAGE,STATUS
 
 The more detailed output will look something like:
 
-    STACK              CONTAINER                    IMAGE                                STATUS
-    code-server-stack  code-server                  codercom/code-server:4.108.1-debian  Up About an hour
-    filebrowser-stack  filebrowser                  filebrowser/filebrowser:v2.50.0-s6   Up 45 minutes (healthy)
-    gitlab-stack       gitlab                       gitlab/gitlab-ce:18.7.1-ce.0         Up 44 minutes (healthy)
-    gitlab-stack       gitlab-runner                gitlab/gitlab-runner:v18.7.2         Up 44 minutes
+    PROJECT            CONTAINER      IMAGE                                STATUS
+    code-server-stack  code-server    codercom/code-server:4.108.1-debian  Up About an hour
+    filebrowser-stack  filebrowser    filebrowser/filebrowser:v2.50.0-s6   Up 45 minutes (healthy)
+    gitlab-stack       gitlab         gitlab/gitlab-ce:18.7.1-ce.0         Up 44 minutes (healthy)
+    gitlab-stack       gitlab-runner  gitlab/gitlab-runner:v18.7.2         Up 44 minutes
 
 ### Keep a container running using a no-op process
 
