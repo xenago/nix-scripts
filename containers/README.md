@@ -34,6 +34,32 @@ Sometimes images are stubborn and annoying to just get a simple interactive root
 
 Useful when managing containers with Docker Compose.
 
+### Enumerate containers and stacks running on the machine
+
+For a basic output:
+
+    docker compose ls
+
+It will look something like:
+
+    user@machine:~$ docker compose ls
+    NAME                STATUS              CONFIG FILES
+    code-server-stack   running(1)          /home/user/containers/code-server/compose/docker-compose.yml
+    filebrowser-stack   running(1)          /home/user/containers/filebrowser/compose/docker-compose.yml
+    gitlab-stack        running(2)          /home/user/containers/gitlab/compose/docker-compose.yml
+
+To filter and manipulate, output in JSON and pipe into tools like `jq`:
+
+    docker compose ls --format json | jq -r 'if type=="array" then .[] else . end | .Name' | while read -r project; do     docker compose -p "$project" ps --all --format "{{.Project}}\t{{.Name}}\t{{.Image}}\t{{.Status}}"; done | column -t -s $'\t' -N STACK,CONTAINER,IMAGE,STATUS
+
+The more detailed output will look something like:
+
+    STACK              CONTAINER                    IMAGE                                STATUS
+    code-server-stack  code-server                  codercom/code-server:4.108.1-debian  Up About an hour
+    filebrowser-stack  filebrowser                  filebrowser/filebrowser:v2.50.0-s6   Up 45 minutes (healthy)
+    gitlab-stack       gitlab                       gitlab/gitlab-ce:18.7.1-ce.0         Up 44 minutes (healthy)
+    gitlab-stack       gitlab-runner                gitlab/gitlab-runner:v18.7.2         Up 44 minutes
+
 ### Keep a container running using a no-op process
 
 Sometimes a container will quit immediately upon starting, which is not helpful if you want to actively have the environment 'up' for some reason. This allows for a container to be brought up as a kind of blank zombie without the usual PID 1 starting.
