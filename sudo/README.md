@@ -14,4 +14,4 @@ Futher, most distros' `/etc/sudoers` configuration has the directive `@includedi
 
 In that case, this one-liner will grant that group passwordless sudo access.
     
-    echo "%sudo ALL = (ALL) NOPASSWD: ALL" >> /etc/sudoers.d/passwordless-sudo
+    sudo bash -c 'echo "%sudo ALL = (ALL) NOPASSWD: ALL" >> /etc/sudoers.d/passwordless-sudo'
