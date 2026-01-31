@@ -6,6 +6,7 @@ WIP project to collect and publish my notes/tools.
 
 See also:
 * [app-scripts](https://github.com/xenago/app-scripts)
+* [media-scripts](https://github.com/xenago/media-scripts)
 * [win-scripts](https://github.com/xenago/win-scripts)
 
 ## Index
