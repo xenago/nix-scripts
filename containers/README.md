@@ -6,6 +6,14 @@ Docker, podman, containerd, etc.
 
 Useful with docker and other associated tooling.
 
+### Configure daemon to allow live container restore
+
+With `"live-restore": true` added to the system-level daemon config file, most containers can keep running when the service is restarted.
+
+Assuming that `/etc/docker/daemon.json` does not already exist:
+
+    sudo mkdir -p /etc/docker && echo '{"live-restore": true}' | sudo tee /etc/docker/daemon.json && sudo systemctl reload docker
+
 ### Take down a single container started by compose
 
 The equivalent of `docker compose down` but for a single container, useful if e.g. a hash is prepended to the name for some reason and you want to clean it up by recreating the container:
