@@ -4,46 +4,65 @@ Apache Guacamole web-based remote access portal.
 
 ## Deployment with Docker
 
-1. Edit the compose file: 
+The folder structure on each instance will look like:
 
-  * Add temporary environment variables to the database container to initialize the instance with users, passwords, and a database:
+```
+/srv
+|--/guacamole
+   |--/compose
+   |  |--/docker-compose.yml
+   |--/data
+      |--<persistent application data>
+```
 
-        environment:
-          - MARIADB_ROOT_PASSWORD=replace-with-db-root-password-here
-          - MARIADB_PASSWORD=replace-with-db-service-account-password-here
-          - MARIADB_USER=guacamole_user
-          - MARIADB_DATABASE=guacamole_db
+Accordingly, the [docker-compose.yml](docker-compose.yml) file in this repo is structured using relative paths from the `compose` directory into the `data` directory.
 
-2. Generate the db initialization script:
+This structure has several benefits, including:
 
-       docker run --rm guacamole/guacamole /opt/guacamole/bin/initdb.sh --mysql > initdb.sql
+* Easier migrations
+  * Moving the services to different machines is trivial: the entire `/srv/guacamole` tree can simply be copied to a different location and restarted there
+* Automated git-based version management
+  * A git repository containing a `docker-compose.yml` file in the root can be cloned directly as the `/srv/guacamole/compose` folder
+  * Since the application data is in a different directory, it is safe to overwrite whatever may be in the `compose` folder since the compose file can be easily restored
 
-3. Start mariadb:
+1. Create the application path and download the compose file:
 
-       docker compose up -d guac-db
+       sudo mkdir -p /srv/guacamole/compose
+       sudo chown -R $USER /srv/guacamole/compose
+       cd /srv/guacamole/compose
+       curl -sLO <url-to-docker-compose.yml>
 
-4. Watch the logs:
+2. Edit the compose file to add temporary environment variables to the database container to initialize the instance with users, passwords, and a database:
 
-       docker logs guac-db
+         environment:
+           - MARIADB_ROOT_PASSWORD=replace-with-db-root-password-here
+           - MARIADB_PASSWORD=replace-with-db-service-account-password-here
+           - MARIADB_USER=guacamole_user
+           - MARIADB_DATABASE=guacamole_db
 
-5. Once it has started, remove the environment variable section from the config and start it again:
+3. Start mariadb and watch the logs to see it warm up:
 
-       docker compose up -d guac-db
+       docker compose -f /srv/guacamole/compose/docker-compose.yml up -d guac-db
+       docker compose -f /srv/guacamole/compose/docker-compose.yml logs -f guac-db
 
-6. Run the initialization script for the new database in a container shell by piping it from the `guacamole` container:
+4. Once it has initialized the users and database, remove the environment variable section from the config and start it again:
+
+        docker compose -f /srv/guacamole/compose/docker-compose.yml up -d guac-db
+
+5. Run the DB initialization script by piping it from a temporary container into a shell within the persistent database container:
 
        docker run --rm guacamole/guacamole:<CONTAINER-TAG-VERSION-HERE> /opt/guacamole/bin/initdb.sh --mysql | docker exec -it guac-db sh -c 'mysql -u root -p"$MYSQL_ROOT_PASSWORD" guacamole_db'
 
-10. Start the other containers up:
+6. Start the other containers up:
 
-        docker compose up -d
+        docker compose -f /srv/guacamole/compose/docker-compose.yml up -d
 
-11. Once logged in, you can set up RDP and ssh. Use the default credentials `guacadmin / guacadmin`:
+7. Once logged in, you can set up RDP and ssh. Use the default credentials `guacadmin / guacadmin`:
 
         http:/<ip-or-host>:8080/guacamole/#/
         
-    Note: use Ctrl+Alt+Shift to return to the menu.
+    Note: use `Ctrl+Alt+Shift` to return to the menu.
 
-12. Change the password of the admin user
+8. Change the password of the admin user
 
-13. Set up nginx (see `guacamole_site_nginx.conf`), replacing `guacamole.local` with the guacamole IP address or hostname from the perspective of the nginx server, and `guacamole.domain.com` with the domain name used. Make sure to generate certs with e.g. certbot.
+9. Set up nginx (see `guacamole_site_nginx.conf`), replacing `guacamole.local` with the guacamole IP address or hostname from the perspective of the nginx server, and `guacamole.domain.com` with the domain name used. Make sure to generate certs with e.g. certbot.
