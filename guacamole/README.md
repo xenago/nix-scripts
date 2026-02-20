@@ -46,4 +46,4 @@ Apache Guacamole web-based remote access portal.
 
 12. Change the password of the admin user
 
-13. Set up nginx (see `guacamole_site_nginx.conf`), replacing `guacamole.local` with the guacamole IP address or hostname from the perspective of the nginx server. Make sure to generate certs with e.g. certbot.
+13. Set up nginx (see `guacamole_site_nginx.conf`), replacing `guacamole.local` with the guacamole IP address or hostname from the perspective of the nginx server, and `guacamole.domain.com` with the domain name used. Make sure to generate certs with e.g. certbot.
