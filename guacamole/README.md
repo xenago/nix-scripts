@@ -25,6 +25,8 @@ This structure has several benefits, including:
   * A git repository containing a `docker-compose.yml` file in the root can be cloned directly as the `/srv/guacamole/compose` folder
   * Since the application data is in a different directory, it is safe to overwrite whatever may be in the `compose` folder since the compose file can be easily restored
 
+### Step-by-step containerized deployment
+
 1. Create the application path and download the compose file:
 
        sudo mkdir -p /srv/guacamole/compose
@@ -59,7 +61,7 @@ This structure has several benefits, including:
 
 7. Once logged in, you can set up RDP and ssh. Use the default credentials `guacadmin / guacadmin`:
 
-        http:/<ip-or-host>:8080/guacamole/#/
+        http://<ip-or-host>:8080/guacamole/#/
         
     Note: use `Ctrl+Alt+Shift` to return to the menu.
 
