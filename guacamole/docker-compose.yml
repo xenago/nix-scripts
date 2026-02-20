@@ -1,55 +1,38 @@
+name: guacamole-stack
+
 services:
 
   guac-db:
-    image: mariadb:10.6.18
+    image: mariadb:10.11
     container_name: guac-db
     hostname: guac-db
     restart: always
     volumes:
-      - "./mariadb/data:/var/lib/mysql"
-      - "./mariadb/conf:/etc/mysql/conf.d"
-    ports:
-      - 3306:3306
-    network_mode: bridge
+      - "../data/mariadb/data:/var/lib/mysql"
+      - "../data/mariadb/conf:/etc/mysql/conf.d"
 
   guacd:
-    image: guacamole/guacd:1.5.5
+    image: guacamole/guacd:1.6.0
     container_name: guacd
     hostname: guacd
     restart: always
-    volumes:
-      - "./guacd/data:/data"
-      - "./guacd/conf:/conf:ro"
-    expose:
-      - 4822
-    network_mode: bridge
-    ports:
-      - 4822:4822
+#    environment:
+#      - LOG_LEVEL=debug
 
   guacamole:
-    image: guacamole/guacamole:1.5.5
+    image: guacamole/guacamole:1.6.0
     container_name: guacamole
     hostname: guacamole
     restart: always
-    volumes:
-      - "./guacamole/guac-home:/data"
-      - "./guacamole/conf:/conf:ro"
-    expose:
-      - 8080
     ports:
-      - 8084:8080
-    network_mode: bridge
+      - 8080:8080
     environment:
-      - "GUACD_HOSTNAME=192.168.1.19"
-      - "GUACD_PORT=4822"
-      - "MYSQL_HOSTNAME=192.168.1.19"
-      - "MYSQL_PORT=3306"
-      - "MYSQL_DATABASE=guacamole_db"
-      - "MYSQL_USER=guacamole_user"
-      - "MYSQL_PASSWORD=PASSWORDGOESHERE"
-      - "GUACAMOLE_HOME=/data"
-      - "REMOTE_IP_VALVE_ENABLED=true"
-      - "PROXY_ALLOWED_IPS_REGEX=192.168.1.19"
-      - "PROXY_IP_HEADER=x-forwarded-for"
-      - "PROXY_BY_HEADER=x-forwarded-by"
-      - "PROXY_PROTOCOL_HEADER=x-forwarded-proto"
+#      - LOG_LEVEL=debug
+      - GUACD_HOSTNAME=guacd
+      - MYSQL_HOSTNAME=guac-db
+      - MYSQL_DATABASE=guacamole_db
+      - MYSQL_USERNAME=guacamole_user
+      - 'MYSQL_PASSWORD=PASSWORDGOESHERE'
+      - REMOTE_IP_VALVE_ENABLED=true
+
+
