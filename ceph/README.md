@@ -27,6 +27,74 @@ Ceph health:
 
 Commands and processes related to the Ceph File System.
 
+## Mounting CephFS
+
+On a clustered server, go get a user's key (in this example, the read-write user is called `rwuser`:
+```
+sudo cephadm shell ceph auth get client.rwuser
+```
+
+It should look something like:
+```
+[client.rwuser]
+        key = Abffbf8r0jeP+w+7Z+sample==
+```
+
+Do the same to get a basic `ceph.conf`:
+```
+sudo cephadm shell ceph config generate-minimal-conf
+```
+
+It should look something like:
+```
+[global]
+        fsid = e322d44c-3342-22db-22ac-dsample22222
+        mon_host = [v2:192.168.1.161:3300/0,v1:192.168.1.161:6789/0] [v2:192.168.1.162:3300/0,v1:192.168.1.162:6789/0] [v2:192.168.1.163:3300/0,v1:192.168.1.163:6789/0] [v2:192.168.1.164:3300/0,v1:192.168.1.164:6789/0]
+```
+
+Copy those two configs and keep them handy. Now, to to the client server.
+
+On the client server, install `ceph-common` to create the necessary folders:
+```
+sudo apt install ceph-common
+```
+
+Add the previously-copied key info to `/etc/ceph/ceph.client.rwuser.keyring`:
+```
+sudo nano /etc/ceph/ceph.client.rwuser.keyring
+```
+
+Populate `ceph.conf` in the same way with the previously-copied minimal config:
+```
+sudo nano /etc/ceph/ceph.conf
+```
+
+Set up the mountpoint:
+```
+sudo mkdir /mnt/cephfs
+```
+
+Optionally, set the user for the mount:
+```
+sudo chown $USER /mnt/cephfs
+```
+
+Define the mount in `/etc/fstab` (change namespace if mounting a different filesystem than the default, for example `cephfs2`:
+```
+echo ':/ /mnt/cephfs ceph    name=rwuser,mds_namespace=cephfs 0 0' | sudo tee -a /etc/fstab
+sudo systemctl daemon-reload
+```
+
+Mount the filesystem:
+```
+sudo mount /mnt/cephfs2
+```
+
+Alternatively, mount it directly without defining in `fstab`:
+```
+mount -t ceph :/ /mnt/cephfs -o name=rwuser,mds_namespace=cephfs
+```
+
 ## Creating a second Ceph File System
 
 In this example, a 6+2 EC data pool on HDD will be created alongside a 3x replicated metadata pool on SSD.
