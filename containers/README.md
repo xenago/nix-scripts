@@ -6,6 +6,15 @@ Docker, podman, containerd, etc.
 
 Useful with docker and other associated tooling.
 
+### Memory overcommit
+
+Some containers (like redis) require `vm.overcommit_memory = 1` to be enabled.
+
+It can be applied by creating and appplying a sysctl configuration: 
+```
+sudo sh -c 'echo vm.overcommit_memory = 1 >> /etc/sysctl.d/overcommit_memory.conf && sysctl -p /etc/sysctl.d/overcommit_memory.conf'
+```
+
 ### Configure daemon to allow live container restore
 
 With `"live-restore": true` added to the system-level daemon config file, most containers can keep running when the service is restarted.
