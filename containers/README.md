@@ -6,6 +6,14 @@ Docker, podman, containerd, etc.
 
 Useful with docker and other associated tooling.
 
+### Group for docker users
+
+Add your user account to the `docker` group in order to run commands without sudo:
+```
+sudo usermod -aG docker $USER
+newgrp docker
+```
+
 ### Memory overcommit
 
 Some containers (like redis) require `vm.overcommit_memory = 1` to be enabled.
