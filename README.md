@@ -14,6 +14,7 @@ See also:
 * [Ceph](ceph)
 * [Chromebook](chromebook)
 * [Containers](containers)
+* [Disk Health](disks)
 * [Disk Serial Numbers](disk-serials)
 * [Disk Temperatures](disk-temp)
 * [Firefox](firefox)
