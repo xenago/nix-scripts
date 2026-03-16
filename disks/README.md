@@ -13,30 +13,58 @@ Users such as `prynstag`, `sotirov`, `david-nidam`, and `johan-ehnberg` discusse
 Ultimately, a replacement is possible.
 
 1. Install the `lm-sensors` package to enable the `sensors` command e.g.
+    ```sh
+    sudo apt install -y lm-sensors
+    ```
 
-       sudo apt install -y lm-sensors
-
-2.   Enable the `drivetemp` module temporarily and test the output with the `sensors` command, i.e.
-
-         sudo modprobe drivetemp
-         sensors
+2.  Enable the `drivetemp` module temporarily and test the output with the `sensors` command, i.e.
+    ```sh
+    sudo modprobe drivetemp
+    sensors
+    ```
 
 3. Enable the module permanently, e.g.
-
-       echo drivetemp | sudo tee /etc/modules-load.d/drivetemp.conf
+    ```sh
+    echo drivetemp | sudo tee /etc/modules-load.d/drivetemp.conf
+    ```
 
 4. Download and run the script, e.g.
+    ```sh
+    curl -sLO https://raw.githubusercontent.com/xenago/nix-scripts/refs/heads/main/disks/disk-temp.sh
+    cat disk-temp.sh
+    chmod +x disk-temp.sh
+    ./disk-temp.sh
+    ```
 
-       curl -sLO https://raw.githubusercontent.com/xenago/nix-scripts/refs/heads/main/disks/disk-temp.sh
-       cat disk-temp.sh
-       chmod +x disk-temp.sh
-       ./disk-temp.sh
+## Serials
+
+Display the serial numbers of disks in the system.
+
+### lsblk method
+
+Most widely supported:
+```sh
+lsblk -o NAME,SERIAL
+```
+
+### hdparm method
+
+1. Install `hdparm`, e.g.
+   ```sh
+   sudo apt-get install -y hdparm
+   ```
+
+2. Run the shell command:
+   ```sh
+   sudo hdparm -I /dev/sd? |& grep -E 'Serial Number|/dev'
+   ```
+
+Note that this command discards errors, so some disks might not show up.
 
 ## Checking disk status
 
 Basic quick check for any failing drives.
 
-Long version:
 ```bash
 (
   # Set threshold for SSD lifetime percentage remaining
@@ -50,7 +78,7 @@ Long version:
       ERRORS=$(echo "$DATA" | awk '$1 ~ /^(5|197|198|181)$/ && $10 > 0 {print $2": "$10}')
       # Check NAND life remaining
       LIFE=$(echo "$DATA" | awk -v t="$THRESHOLD" '$1 ~ /^(169|177|231)$/ && $4 <= t {print $2": "$4"%"}')
-      # Check NVMe "Percentage Used" (inverse logic - this tracks usage, not remaining life)
+      # Check NVMe "Percentage Used" (use inverse logic since this tracks usage, not remaining life)
       NVME_LIFE=$(sudo smartctl -H "$dev" 2>/dev/null | grep "Percentage Used" | awk -v t="$THRESHOLD" '{u=$3; sub(/%/,"",u); if(u >= (100-t)) print "NVMe_Used: "u"%"}')
       if [ -n "$ERRORS" ] || [ -n "$LIFE" ] || [ -n "$NVME_LIFE" ]; then
           EXIT_CODE=1
