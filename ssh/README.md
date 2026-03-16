@@ -16,7 +16,7 @@ Alternatively, add to `~/.ssh/config`:
       HostName server
       HostKeyAlgorithms=+ssh-rsa
 
-Note: see also [Allow RSA SSH keys to avoid OpenSSH error](#allow-rsa-ssh-keys-to-avoid-openssh-error) section below for the server-side configuration.
+Note: see also [Allow RSA SSH keys to avoid OpenSSH error](#allow-client-rsa-ssh-keys-to-avoid-openssh-error) section below for the server-side configuration.
 
 ## SSH Daemon/Service Configuration
 
