@@ -5,17 +5,19 @@ Use the `tmux` terminal multiplexer to run interactive sessions which persist in
 ## CLI
 
 #### List sessions
-
-    tmux ls
+```sh
+tmux ls
+```
 
 #### Attach to specific session based on listed number
-
-    tmux a -t 0
+```sh
+tmux a -t 0
+```
 
 #### Attach to most recent session
-
-    tmux a
-
+```sh
+tmux a
+```
 
 ## Active use
 
@@ -24,25 +26,40 @@ Use the `tmux` terminal multiplexer to run interactive sessions which persist in
 1. Input `Ctrl+B`
 2. Input `d`
 
-#### Split the active window vertically
+#### Split the active window horizontally
 
 This results in two columns, with the left one losing focus.
 
 1. Input `Ctrl+B`
 2. Input `%`
 
-#### Split the active window horizontally
+#### Split the active window vertically
 
 This results in two rows, with the top one losing focus.
 
 1. Input `Ctrl+B`
 2. Input `"`
 
+#### Equalize the horizontally-split session
+
+Equalize the width of the two columns.
+
+1. Input `Ctrl+B`
+2. Input `Alt+1`
+
+#### Equalize the vertically-split session
+
+Equalize the height of the two rows.
+
+1. Input `Ctrl+B`
+2. Input `Alt+2`
+
 ## Configuration
 
 #### Override 2000-line history limit
-
-    echo 'set -g history-limit 65535' >> ~/.tmux.conf
+```bash
+echo 'set -g history-limit 65535' >> ~/.tmux.conf
+```
 
 #### Reload config in active sessions
 
