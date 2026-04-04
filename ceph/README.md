@@ -30,6 +30,32 @@ ceph health detail
 
 Control individual logical disks.
 
+#### Add OSD
+
+1. If ceph was previously used with the disk, remove it:
+
+   ```sh
+   cephadm ceph-volume lvm zap /dev/sdazzzz --destroy
+   ```
+
+2. If MBR/GPT/partitions were on the disk, remove them:
+
+   ```sh
+   sgdisk --zap-all /dev/sdzzz
+   ```
+   or
+   ```sh
+   fdisk /dev/sdzzz then g then w
+   ```
+
+3. Refresh available volumes:
+
+   ```sh
+   ceph orch device ls --refresh
+   ```
+
+Note: this assumes a drivegroup will pick it up and create the OSD at this point.
+
 #### Remove OSD
 
 In this example, OSD ID 999 is being removed:
