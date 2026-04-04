@@ -11,17 +11,64 @@ Control and manage the Ceph storage system.
 
 Cephadm is the orchestrator assumed, but native commands can be used in most cases if the `ceph-common` package/tools are installed and sufficient permissions are available (as `root` or with `sudo`, for example).
 
-Cephadm-style `ceph status`:
+#### Cephadm-style `ceph status`
+```sh
+sudo cephadm shell ceph -s
+```
 
-    sudo cephadm shell ceph -s
+#### Traditional `ceph status`
+```sh
+sudo ceph -s
+```
 
-Traditional `ceph status`:
+#### Cluster health
+```sh
+ceph health detail
+```
 
-    sudo ceph -s
+# OSD management
 
-Ceph health:
+Control individual logical disks.
 
-    ceph health detail
+#### Remove OSD
+
+In this example, OSD ID 999 is being removed:
+
+```sh
+ceph orch osd rm 999 --zap
+```
+
+Monitor the removal:
+```sh
+ceph orch osd rm status
+```
+
+Once the status output is empty, the OSD has been removed. If you have a drive group configured to automatically add new disks, a new OSD may be created if the physical disk is not unplugged ASAP.
+
+#### Check what an automatic reweight would produce
+```sh
+ceph osd test-reweight-by-utilization
+```
+
+#### Apply a manual, temporary reweight
+
+In this example, the OSD ID is `999` and we want an 85% weight:
+
+```sh
+ceph osd reweight 999 0.85
+```
+
+To reset simply apply a weight of `1.0`.
+
+This is not a truly permanent reweight; use `crush reweight` if you want to drain an OSD for example.
+
+#### Apply a permanent manual reweight
+
+In this example, the OSD ID is 999 and we want a weight of 0% to permanently drain all PGs from the OSD:
+
+```sh
+ceph osd crush reweight osd.999 0
+```
 
 # CephFS
 
@@ -30,7 +77,7 @@ Commands and processes related to the Ceph File System.
 ## Mounting CephFS
 
 On a clustered server, go get a user's key (in this example, the read-write user is called `rwuser`:
-```
+```sh
 sudo cephadm shell ceph auth get client.rwuser
 ```
 
@@ -41,7 +88,7 @@ It should look something like:
 ```
 
 Do the same to get a basic `ceph.conf`:
-```
+```sh
 sudo cephadm shell ceph config generate-minimal-conf
 ```
 
@@ -55,43 +102,43 @@ It should look something like:
 Copy those two configs and keep them handy. Now, to to the client server.
 
 On the client server, install `ceph-common` to create the necessary folders:
-```
+```sh
 sudo apt install ceph-common
 ```
 
 Add the previously-copied key info to `/etc/ceph/ceph.client.rwuser.keyring`:
-```
+```sh
 sudo nano /etc/ceph/ceph.client.rwuser.keyring
 ```
 
 Populate `ceph.conf` in the same way with the previously-copied minimal config:
-```
+```sh
 sudo nano /etc/ceph/ceph.conf
 ```
 
 Set up the mountpoint:
-```
+```sh
 sudo mkdir /mnt/cephfs
 ```
 
 Optionally, set the user for the mount:
-```
+```sh
 sudo chown $USER /mnt/cephfs
 ```
 
 Define the mount in `/etc/fstab` (change namespace if mounting a different filesystem than the default, for example `cephfs2`:
-```
+```sh
 echo ':/ /mnt/cephfs ceph    name=rwuser,mds_namespace=cephfs 0 0' | sudo tee -a /etc/fstab
 sudo systemctl daemon-reload
 ```
 
 Mount the filesystem:
-```
+```sh
 sudo mount /mnt/cephfs2
 ```
 
 Alternatively, mount it directly without defining in `fstab`:
-```
+```sh
 mount -t ceph :/ /mnt/cephfs -o name=rwuser,mds_namespace=cephfs
 ```
 
@@ -100,8 +147,9 @@ mount -t ceph :/ /mnt/cephfs -o name=rwuser,mds_namespace=cephfs
 In this example, a 6+2 EC data pool on HDD will be created alongside a 3x replicated metadata pool on SSD.
 
 1. Allow multiple filesystems:
-
-       ceph fs flag set enable_multiple true
+```sh
+ceph fs flag set enable_multiple true
+```
 
 2. Create the pools, e.g. `cephfs2_data` and `cephfs2_metadata` in the dashboard with mostly default settings:
 
