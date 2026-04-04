@@ -56,7 +56,7 @@ Control individual logical disks.
 
 Note: this assumes a drivegroup will pick it up and create the OSD at this point.
 
-#### Remove OSD
+### Remove OSD
 
 In this example, OSD ID 999 is being removed:
 
