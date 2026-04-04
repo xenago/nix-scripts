@@ -30,7 +30,7 @@ ceph health detail
 
 Control individual logical disks.
 
-#### Add OSD
+### Add OSD
 
 1. If ceph was previously used with the disk, remove it:
 
