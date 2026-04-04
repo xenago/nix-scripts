@@ -114,7 +114,7 @@ Basic quick check for any failing drives.
   done
 
   if [ $EXIT_CODE -eq 1 ]; then 
-      echo "ALERT: Multiple failing disks detected on $(hostname)"
+      echo "ALERT: Failing disk(s) detected on $(hostname)"
       exit 1
   fi
 )
