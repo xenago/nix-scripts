@@ -80,14 +80,14 @@ Basic quick check for any failing drives.
       MODEL=$(echo "$INFO" | grep -Ei "Model Family|Device Model|Model Number" | cut -d: -f2 | sed 's/^[ \t]*//')
       SN=$(echo "$INFO" | grep "Serial Number" | awk '{print $NF}')
       
-      # 1: Read Error (not Seagate)
-      # 5: Reallocated
-      # 7: Seek Error (not Seagate)
-      # 187: Uncorrectable 
-      # 188: Timeout
-      # 197: Pending
-      # 198: Offline Uncorrectable
-      # 199: CRC
+      # 1: Read Error (not Seagate - but probably bad)
+      # 5: Reallocated (DRIVE IS BAD)
+      # 7: Seek Error (not Seagate - but probably bad)
+      # 187: Uncorrectable (DRIVE IS BAD)
+      # 188: Timeout (low numbers, unchanging probably ok)
+      # 197: Pending (DRIVE IS BAD)
+      # 198: Offline Uncorrectable (DRIVE IS BAD)
+      # 199: CRC (low numbers, unchanging - probably ok)
       SIGNS=$(echo "$DATA" | awk '$1 ~ /^(1|5|7|187|188|197|198|199)$/ && $10 > 0 {print $2": "$10}')
       
       # Check NAND life remaining
