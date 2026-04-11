@@ -15,6 +15,7 @@ See also:
 * [Chromebook](chromebook)
 * [Containers](containers)
 * [Disks](disks)
+* [Filesystem](filesystem)
 * [Firefox](firefox)
 * [Guacamole](guacamole)
 * [KDE Plasma](plasma)
