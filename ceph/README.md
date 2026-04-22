@@ -26,6 +26,19 @@ sudo ceph -s
 ceph health detail
 ```
 
+# Recovery and data health
+
+### Scrub all PGs related to a specific OSD
+
+This can be useful if you think an OSD might be going bad. Scrub all the data on it and then check the device health.
+
+Replace `<OSD_ID_GOES_HERE>` with the OSD ID, e.g. `72`:
+```sh
+for pg in $(sudo ceph pg ls-by-osd <OSD_ID_GOES_HERE> --format json | jq -r '.pg_stats[].pgid // .[].pgid'); do
+    sudo ceph pg deep-scrub $pg
+done
+```
+
 # OSD management
 
 Control individual logical disks.
