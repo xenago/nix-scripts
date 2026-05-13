@@ -35,3 +35,13 @@ BBR enables squeezing better TCP performance out of most connections. This is es
     sysctl net.ipv4.tcp_congestion_control
     sysctl net.core.default_qdisc
     ```
+
+Note: it is possible to check if `bbr` is supported:
+   ```bash
+   sysctl net.ipv4.tcp_available_congestion_control
+   ```
+If `bbr` is not listed, the module can be loaded (though this is usually unnecessary and it will be automatically loaded if required):
+   ```bash
+   sudo modprobe tcp_bbr
+   ```
+
