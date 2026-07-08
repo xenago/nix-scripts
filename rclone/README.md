@@ -163,3 +163,42 @@ Note: it is recommended to use the Google Cloud console to create a Drive API pr
 ## Usage with Google Drive
 
 When using Google Drive, it is typically useful to pass the `--drive-acknowledge-abuse` flag since Google blocks some files otherwise.
+
+## Useful commands
+
+There are some non-obvious use-cases for rclone which are handy occasionally.
+
+### Perform only the deletions from a sync
+
+List the files that do not exist on the source, and then delete them.
+
+This is a VERY RISKY command, so it is set to `dry-run`.
+
+Omit docker and mounts if they are not needed.
+
+```sh
+(
+  SRC_MOUNT="/path/source"
+  DST_MOUNT="/path/destination"
+  SRC_REMOTE="source:/subpath/to/compare"
+  DST_REMOTE="destination:/subpath/to/ACTUALLY/DELETE/FROM"
+  RCLONE_CONF="$HOME/.config/rclone"
+  RCLONE_IMG="rclone/rclone:1.74"
+  RUN_AS="$(id -u):$(id -g)"
+
+  docker run --rm -i \
+    -v "$RCLONE_CONF":/config/rclone \
+    -v "$SRC_MOUNT":"$SRC_MOUNT":ro \
+    -v "$DST_MOUNT":"$DST_MOUNT":ro \
+    -u "$RUN_AS" \
+    "$RCLONE_IMG" check -q --size-only --missing-on-src - \
+    "$SRC_REMOTE" "$DST_REMOTE" \
+  | docker run --rm -i \
+      -v "$RCLONE_CONF":/config/rclone \
+      -v "$DST_MOUNT":"$DST_MOUNT":rw \
+      -u "$RUN_AS" \
+      "$RCLONE_IMG" delete --verbose --files-from - \
+      --dry-run \
+      "$DST_REMOTE"
+)
+```
